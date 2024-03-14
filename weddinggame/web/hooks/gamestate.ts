@@ -7,7 +7,7 @@ type Idle = {
 type Song = {
   title: string;
   artist: string;
-  album: string;
+  cover: string;
 }
 type Competition = {
   name: 'competition';
@@ -33,7 +33,7 @@ type StartCompetition = {
 type Command = StartCompetition;
 
 export const useGameState = () => {
-  const [gameState, setGameState] = useState<State>({name: 'idle'});
+  const [gameState, setGameState] = useState<{state: State}>({state: {name: 'idle'}});
   const ws = useRef<null | WebSocket>(null);
   const sendCommand = useCallback(
     (command: Command) => {
