@@ -12,6 +12,9 @@ class Song:
     title: str
     artist: str
 
+    def to_dict(self):
+        return dataclasses.asdict(self)
+
 
 @dataclasses.dataclass(frozen=True, kw_only=True)
 class StartCompetition:
@@ -35,12 +38,55 @@ class State(ABC):
     def tick(self, total_dt: datetime.timedelta, dt: datetime.timedelta) -> State:
         return self
 
+    @abstractmethod
+    def to_dict(self):
+        ...
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
 class Idle(State):
-    name: Literal['idle'] = 'idle'
-    def command_received(self, command: Command) -> State:
+
+    def command_received(self, command: Command, total_dt: datetime.timedelta) -> State:
         return self
+
+    def to_dict(self):
+        return {
+            "name": "idle",
+        }
+
+
+@dataclasses.dataclass(kw_only=True, frozen=True)
+class Competition(State):
+    song_a: Song
+    song_b: Song
+    end_time: datetime.timedelta
+    score_a: int
+    score_b: int
+
+    def command_received(self, command: Command, total_dt: datetime.timedelta) -> State:
+        return self
+
+    def to_dict(self):
+        return {
+            **dataclasses.asdict(self),
+            "name": "competition",
+            "song_a": self.song_a.to_dict(),
+            "song_b": self.song_b.to_dict(),
+        }
+
+
+@dataclasses.dataclass(kw_only=True, frozen=True)
+class Victory(State):
+    song: Song
+
+    def command_received(self, command: Command, total_dt: datetime.timedelta) -> State:
+        return self
+
+    def to_dict(self):
+        return {
+            **dataclasses.asdict(self),
+            "name": "competition",
+            "song": self.song.to_dict(),
+        }
 
 
 class Game:
@@ -52,7 +98,10 @@ class Game:
     def tick(self, total_dt: datetime.timedelta, dt: datetime.timedelta):
         self.total_dt = total_dt
         self.current_tick += 1
-            
+
+    def run_command(self, command: Command):
+        self.state = self.state.command_received(command, self.total_dt)
+
     def to_dict(self) -> dict:
         return {
             "state": dataclasses.asdict(self.state),

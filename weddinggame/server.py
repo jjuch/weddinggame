@@ -5,13 +5,12 @@ import datetime
 import json
 import os
 from threading import Thread
-from autokat.game import Game
+from weddinggame.game import Game
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from fastapi.staticfiles import StaticFiles
 
-from autokat.track import Coords, DummyTracker, LaserTracker
 
 task_started = False
 tick_time = 0.1
@@ -37,6 +36,7 @@ async def run_game():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     asyncio.create_task(run_game())
+    yield
 
 
 app = FastAPI(lifespan=lifespan)
@@ -88,3 +88,4 @@ async def websocket_endpoint(websocket: WebSocket):
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
+
