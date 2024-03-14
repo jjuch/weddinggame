@@ -1,0 +1,29 @@
+{"songs":
+    [
+        {
+            "artist": "Vance Joy",
+            "title": "Riptide",
+            "cover": "vancejoy_riptide.jpg"
+        },
+        {
+            "artist": "Oasis",
+            "title": "Wonderwall",
+            "cover": "oasis_wonderwall.jpg"
+        },
+        {
+            "artist": "The Cure",
+            "title": "Lovesong",
+            "cover": "thecure_lovesong.jpg"
+        },
+        {
+            "artist": "Smash Mouth",
+            "title": "I'm a believer",
+            "cover": "smashmouth_imabeliever.jpg"
+        },
+        {
+            "artist": "Neil Diamond",
+            "title": "Sweet Caroline",
+            "cover": "neildiamond_sweetcaroline.jpg"
+        }
+    ]
+}
