@@ -15,16 +15,6 @@ from autokat.track import Coords, DummyTracker, LaserTracker
 
 task_started = False
 tick_time = 0.1
-tracker = LaserTracker()
-# uncomment if mouse is pointer
-dummy_tracker = DummyTracker()
-<<<<<<< HEAD
-tracker = dummy_tracker
-=======
-if os.environ.get('POINTER', 'dummy') == 'dummy':
-    tracker = dummy_tracker
->>>>>>> 54e51db65dde5da65f1ab21c3cacf543034d6389
-
 
 async def run_game():
     start_time = datetime.datetime.now(tz=datetime.UTC)
@@ -35,8 +25,8 @@ async def run_game():
         current_time = datetime.datetime.now(tz=datetime.UTC)
         dt = current_time - last_current_time
         total_dt = current_time - start_time
-        game.tick(pointer_location=tracker.position, total_dt=total_dt, dt=dt, time_since_last_detection=tracker.time_since_last_detection)
-        await manager.broadcast(json.dumps({**game.to_dict(), "calibration": tracker.calibration.to_dict()}))
+        game.tick(total_dt=total_dt, dt=dt)
+        await manager.broadcast(json.dumps({**game.to_dict()}))
         current_time = datetime.datetime.now(tz=datetime.UTC)
         await asyncio.sleep(
             tick_time
@@ -46,15 +36,11 @@ async def run_game():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    thread = Thread(target=tracker.run)
-    thread.start()
     asyncio.create_task(run_game())
-    yield
-    # thread.join()
 
 
 app = FastAPI(lifespan=lifespan)
-app.mount("/static", StaticFiles(directory="autokat/web/static"), name="static")
+app.mount("/static", StaticFiles(directory="weddinggame/web/static"), name="static")
 
 
 class ConnectionManager:
@@ -75,12 +61,17 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
-templates = Jinja2Templates(directory="autokat/web/templates")
+templates = Jinja2Templates(directory="weddinggame/web/templates")
 
 
 @app.get("/")
 async def get(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.get("/backend")
+async def get(request: Request):
+    return templates.TemplateResponse("backend.html", {"request": request})
 
 
 @app.websocket("/ws")
@@ -92,10 +83,8 @@ async def websocket_endpoint(websocket: WebSocket):
             # print(raw_data)
             data = json.loads(raw_data)
             match data:
-                case {"type": "pointer", "position": [x, y]}:
-                    dummy_tracker.position = (x, y)
-                case {"type": "calibration", "corner": corner}:
-                    tracker.update_calibration(**{corner: Coords(*tracker.raw_position)})
+                case _:
+                    pass
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
