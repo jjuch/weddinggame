@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUN SHEEP RUN</title>
+    <style>
+        @font-face {
+            font-family: "Teko";
+            src: url('static/Teko-Regular.ttf') format('truetype');
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Teko;
+        }
+        html, body, #root, svg {
+            height: 100%;
+            width: 100%;
+            background-color: black;
+            overflow: hidden;
+        }
+        .entity {
+            stroke-width: 4px;
+            transition: transform .3s;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="/static/dist/app.js"></script>
+</body>
+</html>
