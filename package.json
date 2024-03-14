@@ -1,12 +1,12 @@
 {
-  "name": "autokat",
+  "name": "weddinggame",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "esbuild autokat/web/app.tsx --bundle --outfile=autokat/web/static/dist/app.js --watch",
-    "build": "esbuild autokat/web/app.tsx --bundle --outfile=autokat/web/static/dist/app.js"
+    "dev": "esbuild weddinggame/web/app.tsx weddinggame/web/app_backend.tsx --bundle --outdir=weddinggame/web/static/dist --watch",
+    "build": "esbuild weddinggame/web/app.tsx weddinggame/web/app_backend.tsx --bundle --outdir=weddinggame/web/static/dist"
   },
   "author": "",
   "license": "ISC",
