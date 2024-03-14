@@ -1,5 +1,5 @@
 #!/bin/bash
 
 source ENV/Scripts/activate
-python -m autokat.game
+uvicorn weddinggame.server:app
 deactivate
