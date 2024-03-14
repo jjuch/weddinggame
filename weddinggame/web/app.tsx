@@ -15,9 +15,18 @@ function App() {
       // sendCommand({ type: "pointer", position: [e.clientX, e.clientY] });
     // });
   }, []);
-  return <>
-    <h2 style={{color: 'white'}}>JOEPIE</h2>
-  </>
+  switch (gameState.state.name) {
+    case 'competition':
+      return (
+        <>
+          <h2 style={{color: 'white'}}>{gameState.state.song_a.title}</h2>
+          <img src={`/albums/${gameState.state.song_a.cover}`} alt="" />
+          <h2 style={{color: 'white'}}>{gameState.state.song_b.title}</h2>
+          <img src={`/albums/${gameState.state.song_b.cover}`} alt="" />
+        </>
+      )
+  }
+ 
   
   
 }

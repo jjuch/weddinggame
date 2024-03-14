@@ -41,6 +41,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="weddinggame/web/static"), name="static")
+app.mount("/albums", StaticFiles(directory="albums"), name="albums")
 
 
 class ConnectionManager:
