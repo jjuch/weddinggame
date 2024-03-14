@@ -1,41 +1,42 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import albumData from '../../../albums/database_test.json';
 
-type Calibration = {
-  top_left?: [number, number];
-  top_right?: [number, number];
-  bottom_left?: [number, number];
-  bottom_right?: [number, number];
-};
+type Idle = {
+  name: 'idle'
+}
+type Song = {
+  title: string;
+  artist: string;
+  album: string;
+}
+type Competition = {
+  name: 'competition';
+  song_a: Song;
+  song_b: Song;
+  score_a: number;
+  score_b: number;
 
-type CalibrationCommand = {
-  type: "calibration";
-  corner: keyof Calibration;
-};
+}
+type Victory = {
+  name: 'victory';
+  song: Song;
+}
 
-type PointerCommand = {
-  type: "pointer";
-  position: [number, number];
-};
-export type GameCommand = CalibrationCommand | PointerCommand;
+type State = Idle | Competition | Victory
+
+type StartCompetition = {
+  name: 'start_competition';
+  song_a: Song;
+  song_b: Song;
+}
+
+type Command = StartCompetition;
 
 export const useGameState = () => {
-  const [gameState, setGameState] = useState({
-    sheep: [] as any[],
-    dog: { x: 0, y: 0, id: 1_000_000, type: "dog", heading: 0 },
-    total_dt: 0 as number,
-    pointer_position: [0, 0],
-    calibration: {} as Calibration,
-    maelstrom: {
-      center: [100, 100],
-      radius: 100,
-    },
-    intro_box: [[0, 0], [100, 100]],
-    state: 'intro' as 'intro' | 'playing' | 'victory',
-    seconds_to_next_game: null as number | null,
-  });
+  const [gameState, setGameState] = useState<State>({name: 'idle'});
   const ws = useRef<null | WebSocket>(null);
   const sendCommand = useCallback(
-    (command: GameCommand) => {
+    (command: Command) => {
       console.log("command", command);
       ws.current?.send(JSON.stringify(command));
     },
@@ -59,3 +60,7 @@ export const useGameState = () => {
   }, []);
   return [gameState, sendCommand] as const;
 };
+
+export const useAlbumData = () => {
+  return albumData;
+}
