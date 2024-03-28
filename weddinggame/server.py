@@ -5,7 +5,7 @@ import datetime
 import json
 import os
 from threading import Thread
-from weddinggame.game import Game
+from weddinggame.game import Game, StartCompetition
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
@@ -15,10 +15,11 @@ from fastapi.staticfiles import StaticFiles
 task_started = False
 tick_time = 0.1
 
+game = Game()
+
 async def run_game():
     start_time = datetime.datetime.now(tz=datetime.UTC)
     last_current_time = start_time
-    game = Game()
     await asyncio.sleep(tick_time)
     while True:
         current_time = datetime.datetime.now(tz=datetime.UTC)
@@ -84,8 +85,8 @@ async def websocket_endpoint(websocket: WebSocket):
             # print(raw_data)
             data = json.loads(raw_data)
             match data:
-                case _:
-                    pass
+                case {"name": "start_competition", **rest}:
+                    game.run_command(StartCompetition.from_dict(rest))
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
