@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 
 
 task_started = False
-tick_time = 0.1
+tick_time = 0.5
 
 game = Game()
 

@@ -16,40 +16,29 @@ import MultipleSelectNative from "./select_album";
 const SCREEN_WIDTH = 1024;
 const SCREEN_HEIGHT = 768;
 
-let Header = (props) => (
-    <h1>Backend State : {JSON.stringify(props.states)}</h1>
-);
-
-function SelectGrid () {
-    return (
-        <Box sx={{ width: '100%' }}>
-            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={6}>
-                    <MultipleSelectNative 
-                        screenWidth={SCREEN_WIDTH} screenHeight={SCREEN_HEIGHT}
-                        id={1}
-                        data={songs}
-                        />
-                </Grid>
-                <Grid item xs={6}>
-                    <MultipleSelectNative 
-                        screenWidth={SCREEN_WIDTH} screenHeight={SCREEN_HEIGHT}
-                        id={2}
-                        data={songs}/>
-                </Grid>
-            </Grid>
-        </Box>
-    );
-}
 
 function App() {
 
     const [gameState, sendCommand] = useGameState();
-
+    const [songA, setSongA] = useState(songs[0]);
+    const [songB, setSongB] = useState(songs[0]);
     return (
         <div>
-            <Header states={gameState}/>
-            <SelectGrid/>
+            <pre>{JSON.stringify(gameState, null, 2)}</pre>
+            <p>{songA.title}</p>
+            <p>{songB.title}</p>
+            <select multiple size={10} onChange={e => setSongA(JSON.parse(e.target.value))}>
+                {songs.map((song, index) => {
+                    return <option key={index + '1'} value={JSON.stringify(song)}>{song.title}</option>
+                })}
+            </select>
+            <select multiple size={10} onChange={e => setSongB(JSON.parse(e.target.value))}>
+                {songs.map((song, index) => {
+                    return <option key={index + '2'} value={JSON.stringify(song)}>{song.title}</option>
+                })}
+            </select>
+            <button onClick={() => sendCommand({name: 'start_competition', song_a: songA, song_b: songB})}>Start Competition</button>
+            {/* <SelectGrid/> */}
         </div>
     );
 }
