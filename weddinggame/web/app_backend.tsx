@@ -9,45 +9,46 @@ import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { songs } from "../../albums/database_test.json";
 
 import MultipleSelectNative from "./select_album";
 
 const SCREEN_WIDTH = 1024;
 const SCREEN_HEIGHT = 768;
 
-function App() {
+let Header = (props) => (
+    <h1>Backend State : {JSON.stringify(props.states)}</h1>
+);
 
-    const [gameState, sendCommand] = useGameState();
-
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-      }));
-
-    const SelectGrid = () => (
+function SelectGrid () {
+    return (
         <Box sx={{ width: '100%' }}>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6}>
-                    <MultipleSelectNative />
+                    <MultipleSelectNative 
+                        screenWidth={SCREEN_WIDTH} screenHeight={SCREEN_HEIGHT}
+                        id={1}
+                        data={songs}
+                        />
                 </Grid>
                 <Grid item xs={6}>
-                    <Item>2</Item>
+                    <MultipleSelectNative 
+                        screenWidth={SCREEN_WIDTH} screenHeight={SCREEN_HEIGHT}
+                        id={2}
+                        data={songs}/>
                 </Grid>
             </Grid>
         </Box>
     );
+}
 
+function App() {
 
-    let Header = () => (
-        <h1>Backend State : </h1>
-    );
+    const [gameState, sendCommand] = useGameState();
 
     return (
         <div>
-            <Header />
+            <Header states={gameState}/>
             <SelectGrid/>
         </div>
     );

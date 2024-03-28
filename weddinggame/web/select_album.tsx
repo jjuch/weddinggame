@@ -16,7 +16,7 @@ const names = [
   'Kelly Snyder',
 ];
 
-export default function MultipleSelectNative() {
+export default function MultipleSelectNative(props) {
   const [personName, setPersonName] = React.useState<string[]>([]);
   const handleChangeMultiple = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { options } = event.target;
@@ -29,11 +29,15 @@ export default function MultipleSelectNative() {
     setPersonName(value);
   };
 
+  const minFormWidth = props.screenWidth/4;
+  const maxFormWidth = props.screenWidth/3;
+
   return (
-    <div>
-      <FormControl sx={{ m: 1, minWidth: 120, maxWidth: 300 }}>
-        <InputLabel shrink htmlFor="select-multiple-native">
-          Native
+    <div style={{height: props.screenHeight}}>
+      <FormControl sx={{ m: 1, minWidth: '95%', maxWidth: '100%' }}>
+        <InputLabel shrink 
+        htmlFor="select-multiple-native">
+          Album {props.id}
         </InputLabel>
         <Select<string[]>
           multiple
@@ -45,10 +49,13 @@ export default function MultipleSelectNative() {
           inputProps={{
             id: 'select-multiple-native',
           }}
+          style={
+            {height: "100%"}
+          }
         >
-          {names.map((name) => (
-            <option key={name} value={name}>
-              {name}
+          {props.data.map((song) => (
+            <option key={song.title + props.id} value={song.title}>
+              {song.title}
             </option>
           ))}
         </Select>
